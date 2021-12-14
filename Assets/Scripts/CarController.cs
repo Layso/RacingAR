@@ -87,6 +87,8 @@ public class CarController : MonoBehaviour {
 			ResetTurn();
 		}
 
+		
+
 		if (AccelerationJoystick.JoystickPosition.y != 0) {
 			Move(AccelerationJoystick.JoystickPosition.y);
 		} else {
@@ -101,8 +103,21 @@ public class CarController : MonoBehaviour {
 	}
 
 	private void Move(float AxisValue) {
+		Text dt = null;
+		var texts = FindObjectsOfType<Text>();
+		foreach (var text in texts) {
+			if (text.name == "DebugText") {
+				dt = text;
+				break;
+			}
+		}
+
 		if (rb != null && rb.velocity.magnitude < MaxVelocity) {
+			var asd = transform.forward * AccelerationForce * AxisValue;
+			dt.text = asd.ToString();
 			rb.AddForce(transform.forward * AccelerationForce * AxisValue, ForceMode.Acceleration);
+		} else {
+			dt.text = "anan";
 		}
 	}
 

@@ -1262,6 +1262,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 915624207906242550, guid: 0c2c71c7e9cc6b74c8b91953eaa5124a, type: 3}
+      propertyPath: DebugText
+      value: 
+      objectReference: {fileID: 633987596}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c2c71c7e9cc6b74c8b91953eaa5124a, type: 3}
 --- !u!1 &1254507061
@@ -1671,7 +1675,7 @@ MonoBehaviour:
   CarObject: {fileID: 1679316337262068, guid: 05ba6f325795a744fb8dcbf13d5815b2, type: 3}
   ConeObject: {fileID: 1722352228393346, guid: 0c61da31c73cd124a8bd99e97cae9b9b, type: 3}
   ObstacleObject: {fileID: 1111471699671688, guid: e109db37a4d47aa4d9fe2d260afda05b, type: 3}
-  RoadObject: {fileID: 669077829171598324, guid: 29df427cb970de341be1b0da0d55fc90, type: 3}
+  RoadObject: {fileID: 669077829171598324, guid: 7d8d3e0072f29be4f8267c6633ca29d7, type: 3}
   CarButton: {fileID: 259715465}
   ConeButton: {fileID: 1577749885}
   ObstacleButton: {fileID: 40919616}
@@ -1971,5 +1975,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 915624207906242550, guid: 0c2c71c7e9cc6b74c8b91953eaa5124a, type: 3}
+      propertyPath: DebugText
+      value: 
+      objectReference: {fileID: 633987596}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c2c71c7e9cc6b74c8b91953eaa5124a, type: 3}
