@@ -7,25 +7,27 @@ public enum GameState {
 	Initializing,
 	RoadBuilding,
 	ObstaclePlacing,
+	WaitingToStart,
 	Racing,
 	Returning
 }
 
 public class GameManager : MonoBehaviour {
-	//public delegate GameState GameStateUpdated();
 	public event Action<GameState> GameStateUpdated;
 
 	private GameState State;
-	//private GameScreenController Controller;
+
+	public GameState GetState() {
+		return State;
+	}
 
 	private void Awake() {
 		SetGameState(GameState.Initializing);
-		//Controller = FindObjectOfType<GameScreenController>();
 		ARSessionFactory.SessionInitialized += this.OnExperienceInitialized;
 	}
 
 	private void OnExperienceInitialized(AnyARSessionInitializedArgs args) {
-		SetGameState(GameState.ObstaclePlacing);
+		SetGameState(GameState.RoadBuilding);
 	}
 
 	void Update() {
@@ -33,9 +35,15 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void SetGameState(GameState NewState) {
+		print("Before: " + State + " / After: " + NewState);
 		State = NewState;
 		if (GameStateUpdated != null) {
 			GameStateUpdated.Invoke(State);
 		}
+	}
+
+	public void UpdateB() {
+
+		SetGameState(State+1);
 	}
 }

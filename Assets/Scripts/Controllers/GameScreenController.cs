@@ -15,20 +15,6 @@ public class GameScreenController : MonoBehaviour {
 	}
 
 	private void OnGameStateUpdated(GameState State) {
-		switch (State) {
-			case GameState.Initializing:
-				break;
-			case GameState.RoadBuilding:
-				break;
-			case GameState.ObstaclePlacing:
-				break;
-			case GameState.Racing:
-				break;
-			case GameState.Returning:
-				break;
-			default:
-				break;
-		}
 	}
 
 	public void OnPlaceButtonClicked() {
