@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.UI;
 
-public class ExperienceManager : MonoBehaviour {
+public class ExperienceManager_Deprecated : MonoBehaviour {
 	IARSession Session;
 
 	void Start() {
