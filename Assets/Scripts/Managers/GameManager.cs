@@ -46,4 +46,11 @@ public class GameManager : MonoBehaviour {
 
 		SetGameState(State+1);
 	}
+
+	public void OnRoadBuildingCompleted() {
+		SetGameState(GameState.ObstaclePlacing);
+	}
+	public void OnObstaclePlacementCompleted() {
+		SetGameState(GameState.WaitingToStart);
+	}
 }

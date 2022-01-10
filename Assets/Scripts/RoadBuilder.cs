@@ -10,16 +10,14 @@ public class RoadBuilder : MonoBehaviour {
 	[SerializeField] private PathCreator PathCreator;
 	[SerializeField] private GameObject RoadNodePrefab;
 	[SerializeField] private GameObject RoadBuilderButtonsPrefab;
-	[SerializeField] private Text DebugText;
 
 	private List<Transform> RoadNodes;
 	private ExperienceManager ExperienceManager;
+	private RoadBuilderButtons Buttons;
 
 	void Start() {
-		DebugText.text = "asd";
 		RoadNodes = new List<Transform>();
 		ExperienceManager = FindObjectOfType<ExperienceManager>();
-		PathCreator.pathUpdated += this.OnPathUpdated;
 
 		Canvas canvas = FindObjectOfType<Canvas>();
 		if (canvas != null && RoadBuilderButtonsPrefab != null) {
@@ -27,11 +25,11 @@ public class RoadBuilder : MonoBehaviour {
 			buttonsGameObject.SetParent(canvas.transform);
 			buttonsGameObject.anchoredPosition = Vector2.zero;
 
-			RoadBuilderButtons buttons = buttonsGameObject.GetComponent<RoadBuilderButtons>();
-			if (buttons != null) {
-				buttons.AddButton.onClick.AddListener(OnAddNodeButtonClicked);
-				buttons.RemoveButton.onClick.AddListener(OnRemoveNodeButtonClicked);
-				buttons.GenerateButton.onClick.AddListener(OnGenerateNodeButtonClicked);
+			Buttons = buttonsGameObject.GetComponent<RoadBuilderButtons>();
+			if (Buttons != null) {
+				Buttons.AddButton.onClick.AddListener(OnAddNodeButtonClicked);
+				Buttons.RemoveButton.onClick.AddListener(OnRemoveNodeButtonClicked);
+				Buttons.GenerateButton.onClick.AddListener(OnGenerateNodeButtonClicked);
 			}
 		}
 	}
@@ -41,7 +39,6 @@ public class RoadBuilder : MonoBehaviour {
 
 		if (!test) {
 			if (ExperienceManager.GetWorldPosition(new Vector2(Camera.main.pixelWidth/2, Camera.main.pixelHeight/2), out Vector3 WorldPoint)) {
-				DebugText.text += ("\n" + WorldPoint.ToString());
 				RoadNodes.Add(Instantiate(RoadNodePrefab, WorldPoint, Quaternion.identity).transform);
 			}
 		} else {
@@ -75,15 +72,12 @@ public class RoadBuilder : MonoBehaviour {
 
 	private void OnGenerateNodeButtonClicked() {
 		if (PathCreator != null) {
-			DebugText.text += ("\nGenerating path with " + RoadNodes.Count + " nodes");
 			PathCreator.bezierPath = new BezierPath(RoadNodes, space:PathSpace.xyz);
 			FindObjectOfType<RoadMeshCreator>().TriggerUpdate();
 			RoadNodes.ForEach((node) => Destroy(node.gameObject));
 			RoadNodes.Clear();
+			Destroy(Buttons.gameObject);
+			FindObjectOfType<GameManager>().OnRoadBuildingCompleted();
 		}
-	}
-
-	private void OnPathUpdated() {
-		DebugText.text += ("\nPath updated");
 	}
 }
