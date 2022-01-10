@@ -106,7 +106,9 @@ namespace PathCreation {
         ///<param name="isClosed"> Should the end point connect back to the start point? </param>
         ///<param name="space"> Determines if the path is in 3d space, or clamped to the xy/xz plane </param>
         public BezierPath (IEnumerable<Transform> transforms, bool isClosed = false, PathSpace space = PathSpace.xy):
-            this (transforms.Select (t => t.position), isClosed, space) { }
+            this (transforms.Select (t => t.position), isClosed, space) {
+            controlMode = ControlMode.Automatic;
+        }
 
         /// <summary> Creates a path from the supplied 2D points </summary>
         ///<param name="points"> List or array of 2d points to create the path from. </param>
