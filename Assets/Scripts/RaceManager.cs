@@ -6,8 +6,10 @@ using UnityEngine.UI;
 public class RaceManager : MonoBehaviour {
 	[SerializeField] private int CountdownStart;
 	[SerializeField] private Text CountdownText;
+	[SerializeField] private Text PenaltiesText;
 	[SerializeField] private Text ChronometerText;
 	[SerializeField] private Button ResetButton;
+	[SerializeField] private GameObject StatCorner;
 	[SerializeField] private GameObject VehiclePrefab;
 	[SerializeField] private Joystick SteeringJoystick;
 	[SerializeField] private Joystick AccelerationJoystick;
@@ -15,8 +17,8 @@ public class RaceManager : MonoBehaviour {
 	private GameManager Manager;
 
 	void Start() {
+		StatCorner.gameObject.SetActive(false);
 		ResetButton.gameObject.SetActive(false);
-		ChronometerText.gameObject.SetActive(false);
 		CountdownText.text = string.Empty;
 		Manager = FindObjectOfType<GameManager>();
 		Manager.GameStateUpdated += this.OnGameStateUpdated;
@@ -28,14 +30,15 @@ public class RaceManager : MonoBehaviour {
 		} else if (State == GameState.Racing) {
 			StartCoroutine(StartRace());
 		} else if (State == GameState.Returning) {
+			StatCorner.gameObject.SetActive(false);
 			ResetButton.gameObject.SetActive(false);
-			ChronometerText.gameObject.SetActive(false);
 			SteeringJoystick.gameObject.SetActive(false);
 			AccelerationJoystick.gameObject.SetActive(false);
 		}
 	}
 
 	void Update() {
+		PenaltiesText.text = Manager.Penalties.ToString();
 		ChronometerText.text = TimeSpan.FromSeconds(Time.time - Manager.StartTime).ToString("mm\\:ss\\.fff");
 	}
 
@@ -58,8 +61,8 @@ public class RaceManager : MonoBehaviour {
 		Transform startTransform = FindObjectOfType<GameManager>().StartTransform;
 		VehicleController vehicle = Instantiate(VehiclePrefab, startTransform.position, startTransform.rotation).GetComponent<VehicleController>();
 
+		StatCorner.gameObject.SetActive(true);
 		ResetButton.gameObject.SetActive(true);
-		ChronometerText.gameObject.SetActive(true);
 		SteeringJoystick.gameObject.SetActive(true);
 		AccelerationJoystick.gameObject.SetActive(true);
 		vehicle.SetJoysticks(SteeringJoystick, AccelerationJoystick);

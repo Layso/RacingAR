@@ -51,15 +51,15 @@ public class ObstaclePlacer : MonoBehaviour {
 	}
 
 	private void OnPlaceButtonClicked() {
-		/*
 		if (Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Camera.main.pixelWidth/2, Camera.main.pixelHeight/2, 0)), out RaycastHit Hit)) {
-			print("Hit to: " + Hit.transform.name);
-			DebugText.text = Hit.transform.name;
-		}
+			Vector3 position = Hit.point;			
+			if (SelectedPrefab == ConePrefab) {
+				position += new Vector3(0,0.05f,0);
+			} else {
+				position += new Vector3(0, 0.03f, 0);
+			}
 
-		 */
-		if (FindObjectOfType<ExperienceManager>().GetWorldPosition(new Vector3(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2), out Vector3 WorldPoint)) {
-			Placements.Add(Instantiate(SelectedPrefab, WorldPoint, Quaternion.identity));
+			Placements.Add(Instantiate(SelectedPrefab, position, Quaternion.FromToRotation(Vector3.up, Hit.normal)));
 		}
 	}
 
