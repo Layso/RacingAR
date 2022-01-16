@@ -12,9 +12,8 @@ public class CarController : MonoBehaviour {
 	public float MaxVelocity = 50;
 	public float TurnForce = 20;
 
-	[SerializeField] private Joystick SteeringJoyStick;
-	[SerializeField] private Joystick AccelerationJoystick;
-
+	public Joystick SteeringJoystick;
+	public Joystick AccelerationJoystick;
 
 	GameObject Wheel_FrontRight;
 	GameObject Wheel_FrontLeft;
@@ -55,15 +54,6 @@ public class CarController : MonoBehaviour {
 				break;
 			}
 		}
-
-		Joystick[] joysticks = FindObjectsOfType<Joystick>();
-		foreach (var js in joysticks) {
-			if (js.name == "LeftJoystick") {
-				SteeringJoyStick = js;
-			} else {
-				AccelerationJoystick = js;
-			}
-		}
 	}
 
 	void Update() {
@@ -81,43 +71,39 @@ public class CarController : MonoBehaviour {
 	}
 
 	public void InputCheck() {
-		if (SteeringJoyStick.JoystickPosition.x != 0) {
-			Turn(SteeringJoyStick.JoystickPosition.x);
-		} else {
-			ResetTurn();
-		}
-
-		
-
-		if (AccelerationJoystick.JoystickPosition.y != 0) {
-			Move(AccelerationJoystick.JoystickPosition.y);
+#if UNITY_EDITOR
+		if (AccelerationJoystick.Direction.y != 0) {
+			Move(AccelerationJoystick.Direction.y);
 		} else {
 			rb.velocity = rb.velocity * DecelerationPercent;
 		}
+
+		if (Input.GetKey(KeyCode.W)) {
+			Move(1);
+		} else if (Input.GetKey(KeyCode.S)) {
+			Move(-1);
+		} else {
+			rb.velocity = rb.velocity * DecelerationPercent;
+		}
+#else
+		if (SteeringJoystick.Direction.x != 0) {
+			Turn(SteeringJoystick.Direction.x);
+		} else {
+			ResetTurn();
+		}
+#endif
 	}
 
 	private void Turn(float AxisValue) {
-		transform.Rotate(new Vector3(0, TurnForce * Time.deltaTime * Mathf.Min(10, rb.velocity.magnitude) * (ForwardVelocity ? 1 : -1), 0));
+		transform.Rotate(new Vector3(0, AxisValue * TurnForce * Time.deltaTime * Mathf.Min(10, rb.velocity.magnitude) * (ForwardVelocity ? 1 : -1), 0));
 		Axle_Right.transform.localEulerAngles = new Vector3(0, WHEEL_TURN_ANGLE * AxisValue, 0);
 		Axle_Left.transform.localEulerAngles = new Vector3(0, WHEEL_TURN_ANGLE * AxisValue, 0);
 	}
 
 	private void Move(float AxisValue) {
-		Text dt = null;
-		var texts = FindObjectsOfType<Text>();
-		foreach (var text in texts) {
-			if (text.name == "DebugText") {
-				dt = text;
-				break;
-			}
-		}
-
 		if (rb != null && rb.velocity.magnitude < MaxVelocity) {
 			var asd = transform.forward * AccelerationForce * AxisValue;
-			dt.text = asd.ToString();
 			rb.AddForce(transform.forward * AccelerationForce * AxisValue, ForceMode.Acceleration);
-		} else {
-			dt.text = "anan";
 		}
 	}
 

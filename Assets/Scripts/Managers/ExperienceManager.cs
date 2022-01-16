@@ -11,11 +11,13 @@ using UnityEngine;
 public class ExperienceManager : MonoBehaviour {
 	[SerializeField] private GameObject PlanePrefab;
 
+	private bool RaceStarted;
 	private IARSession Session;
 	private Dictionary<Guid, GameObject> PlaneLookup;
 
 
 	void Start() {
+		RaceStarted = false;
 		Session = ARSessionFactory.Create();
 		PlaneLookup = new Dictionary<Guid, GameObject>();
 
@@ -36,10 +38,12 @@ public class ExperienceManager : MonoBehaviour {
 	}
 
 	private void OnAnchorsRemoved(AnchorsArgs args) {
-		foreach (var anchor in args.Anchors) {
-			if (anchor.AnchorType == AnchorType.Plane) {
-				Destroy(PlaneLookup[anchor.Identifier]);
-				PlaneLookup.Remove(anchor.Identifier);
+		if (!RaceStarted) {
+			foreach (var anchor in args.Anchors) {
+				if (anchor.AnchorType == AnchorType.Plane) {
+					Destroy(PlaneLookup[anchor.Identifier]);
+					PlaneLookup.Remove(anchor.Identifier);
+				}
 			}
 		}
 	}
@@ -49,24 +53,28 @@ public class ExperienceManager : MonoBehaviour {
 	}
 
 	private void OnAnchorsUpdated(AnchorsArgs args) {
-		foreach (IARPlaneAnchor anchor in args.Anchors) {
-			if (PlaneLookup.TryGetValue(anchor.Identifier, out GameObject plane)) {
-				plane.transform.position = anchor.Transform.ToPosition();
-				plane.transform.rotation = anchor.Transform.ToRotation();
-				plane.transform.localScale = anchor.Extent;
+		if (!RaceStarted) {
+			foreach (IARPlaneAnchor anchor in args.Anchors) {
+				if (PlaneLookup.TryGetValue(anchor.Identifier, out GameObject plane)) {
+					plane.transform.position = anchor.Transform.ToPosition();
+					plane.transform.rotation = anchor.Transform.ToRotation();
+					plane.transform.localScale = anchor.Extent;
+				}
 			}
 		}
 	}
 
 	private void OnAnchorsAdded(AnchorsArgs args) {
-		foreach (IARPlaneAnchor anchor in args.Anchors) {
-			if (anchor.AnchorType == AnchorType.Plane) {
-				var plane = Instantiate(PlanePrefab);
-				PlaneLookup.Add(anchor.Identifier, plane);
+		if (!RaceStarted) {
+			foreach (IARPlaneAnchor anchor in args.Anchors) {
+				if (anchor.AnchorType == AnchorType.Plane) {
+					var plane = Instantiate(PlanePrefab);
+					PlaneLookup.Add(anchor.Identifier, plane);
 
-				plane.transform.position = anchor.Transform.ToPosition();
-				plane.transform.rotation = anchor.Transform.ToRotation();
-				plane.transform.localScale = anchor.Extent;
+					plane.transform.position = anchor.Transform.ToPosition();
+					plane.transform.rotation = anchor.Transform.ToRotation();
+					plane.transform.localScale = anchor.Extent;
+				}
 			}
 		}
 	}
@@ -85,5 +93,13 @@ public class ExperienceManager : MonoBehaviour {
 		}
 
 		return false;
+	}
+
+	public void OnRaceStarted() {
+		RaceStarted = true;
+		foreach (GameObject plane in PlaneLookup.Values) {
+			Destroy(plane);
+		}
+		PlaneLookup.Clear();
 	}
 }

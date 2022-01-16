@@ -34,6 +34,6 @@ public class MainMenuController : MonoBehaviour {
 	}
 
 	public void OpenDebugMenu() {
-		SceneManager.LoadScene("SampleScene");
+		SceneManager.LoadScene("Test");
 	}
 }
