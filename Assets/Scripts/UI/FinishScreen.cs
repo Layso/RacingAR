@@ -27,7 +27,7 @@ public class FinishScreen : MonoBehaviour {
 	}
 
 	public void OnReturnButtonPressed() {
-		SceneManager.LoadScene("MainMenu");
+		FindObjectOfType<GameScreenController>().BackToMainMenu();
 	}
 
 	private void UpdateDisplay() {

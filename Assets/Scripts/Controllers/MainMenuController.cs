@@ -36,4 +36,14 @@ public class MainMenuController : MonoBehaviour {
 	public void OpenDebugMenu() {
 		SceneManager.LoadScene("Test");
 	}
+
+	public void OnGitHubClicked() {
+		Application.OpenURL("https://github.com/Layso/RacingAR");
+	}
+	public void OnLightshipClicked() {
+		Application.OpenURL("https://lightship.dev/");
+	}
+	public void OnYouTubeClicked() {
+		Application.OpenURL("https://www.youtube.com/c/SebastianLague");
+	}
 }

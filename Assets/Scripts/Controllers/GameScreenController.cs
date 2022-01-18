@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameScreenController : MonoBehaviour {
-	[SerializeField] private GameObject TestObject;
-	private ExperienceManager ExperienceManager;
+	[SerializeField] private Button MenuButton;
+	[SerializeField] private GameObject MenuContent;
+
 
 	void Start() {
-		ExperienceManager = FindObjectOfType<ExperienceManager>();	
 		GameManager manager = FindObjectOfType<GameManager>();
 		if (manager != null) {
 			manager.GameStateUpdated += this.OnGameStateUpdated;
@@ -15,14 +17,19 @@ public class GameScreenController : MonoBehaviour {
 	}
 
 	private void OnGameStateUpdated(GameState State) {
+		if (State == GameState.Returning) {
+			MenuButton.gameObject.SetActive(false);
+			MenuContent.gameObject.SetActive(false);
+		}
 	}
 
-	public void OnPlaceButtonClicked() {
-		if (ExperienceManager != null) {
-			if (ExperienceManager.GetWorldPosition(new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2), out Vector3 WorldPoint)) {
-				Instantiate(TestObject, WorldPoint, Quaternion.identity);
-				print("yiha");
-			}
-		}
+	public void OnMenuButtonPressed() {
+		MenuContent.SetActive(!MenuContent.activeSelf);
+	}
+
+
+	public void BackToMainMenu() {
+		FindObjectOfType<ExperienceManager>().StopExperience();
+		SceneManager.LoadScene("MainMenu");
 	}
 }

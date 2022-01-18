@@ -54,9 +54,9 @@ public class ObstaclePlacer : MonoBehaviour {
 		if (Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Camera.main.pixelWidth/2, Camera.main.pixelHeight/2, 0)), out RaycastHit Hit)) {
 			Vector3 position = Hit.point;			
 			if (SelectedPrefab == ConePrefab) {
-				position += new Vector3(0,0.05f,0);
+				position += new Vector3(0,0.005f,0);
 			} else {
-				position += new Vector3(0, 0.03f, 0);
+				position += new Vector3(0, 0.015f, 0);
 			}
 
 			Placements.Add(Instantiate(SelectedPrefab, position, Quaternion.FromToRotation(Vector3.up, Hit.normal)));

@@ -3,6 +3,7 @@ using Niantic.ARDK.AR.Anchors;
 using Niantic.ARDK.AR.ARSessionEventArgs;
 using Niantic.ARDK.AR.Configuration;
 using Niantic.ARDK.AR.HitTest;
+using Niantic.ARDK.Extensions;
 using Niantic.ARDK.Utilities;
 using System;
 using System.Collections.Generic;
@@ -21,10 +22,10 @@ public class ExperienceManager : MonoBehaviour {
 		Session = ARSessionFactory.Create();
 		PlaneLookup = new Dictionary<Guid, GameObject>();
 
-		Session.AnchorsAdded += this.OnAnchorsAdded;
-		Session.AnchorsUpdated += this.OnAnchorsUpdated;
-		Session.AnchorsMerged += this.OnAnchorsMerged;
-		Session.AnchorsRemoved += this.OnAnchorsRemoved;
+		//Session.AnchorsAdded += this.OnAnchorsAdded;
+		//Session.AnchorsUpdated += this.OnAnchorsUpdated;
+		//Session.AnchorsMerged += this.OnAnchorsMerged;
+		//Session.AnchorsRemoved += this.OnAnchorsRemoved;
 
 		var config = ARWorldTrackingConfigurationFactory.Create();
 		config.WorldAlignment = WorldAlignment.Gravity;
@@ -101,5 +102,10 @@ public class ExperienceManager : MonoBehaviour {
 			Destroy(plane);
 		}
 		PlaneLookup.Clear();
+		FindObjectOfType<ARPlaneManager>().StopPlaneDetection();
+	}
+
+	public void StopExperience() {
+		Session.Dispose();
 	}
 }

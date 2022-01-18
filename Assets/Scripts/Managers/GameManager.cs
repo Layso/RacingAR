@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour {
 		this.StartTransform = StartTransform;
 		Instantiate(FinishLinePrefab, EndPosition, Quaternion.identity);
 		SetGameState(GameState.ObstaclePlacing);
+		FindObjectOfType<ExperienceManager>().OnRaceStarted();
 	}
 	public void OnObstaclePlacementCompleted() {
 		SetGameState(GameState.WaitingToStart);
@@ -62,7 +63,6 @@ public class GameManager : MonoBehaviour {
 	public void OnCountdownEnded() {
 		StartTime = Time.time;
 		SetGameState(GameState.Racing);
-		FindObjectOfType<ExperienceManager>().OnRaceStarted();
 	}
 
 	public void OnRaceEnded() {

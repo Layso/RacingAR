@@ -93,7 +93,7 @@ public class RoadBuilder : MonoBehaviour {
 		GameObject obj = new GameObject();
 		Transform first = RoadNodes[0];
 		Transform second = RoadNodes[1];
-		float offset = 0.25f;
+		float offset = 0.05f;
 
 		obj.transform.position = first.position;
 		obj.transform.rotation = Quaternion.LookRotation(second.position - first.position, Vector3.up);

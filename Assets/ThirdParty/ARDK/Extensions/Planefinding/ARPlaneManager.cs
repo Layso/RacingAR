@@ -179,5 +179,10 @@ namespace Niantic.ARDK.Extensions
         RaiseConfigurationChanged();
       }
     }
+
+    public void StopPlaneDetection() {
+        StopListeningToSession();
+        ClearAllPlanes();
+    }
   }
 }
