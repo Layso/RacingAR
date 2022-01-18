@@ -106,6 +106,6 @@ public class ExperienceManager : MonoBehaviour {
 	}
 
 	public void StopExperience() {
-		Session.Dispose();
+		//Session.Dispose();
 	}
 }
