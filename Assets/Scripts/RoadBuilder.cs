@@ -15,10 +15,17 @@ public class RoadBuilder : MonoBehaviour {
 	private ExperienceManager ExperienceManager;
 	private RoadBuilderButtons Buttons;
 
+	private float RotationAngle;
+	private List<Vector3> LoadTrackPositions;
+
 	void Start() {
+		RotationAngle = 0;
+		LoadTrackPositions = null;
 		RoadNodes = new List<Transform>();
 		ExperienceManager = FindObjectOfType<ExperienceManager>();
 
+		FindObjectOfType<GameManager>().TrackLoaded += this.OnTrackLoaded;
+		FindObjectOfType<GameScreenController>().SliderValueChanged += this.OnSliderValueChanged;
 		Canvas canvas = FindObjectOfType<Canvas>();
 		if (canvas != null && RoadBuilderButtonsPrefab != null) {
 			RectTransform buttonsGameObject = Instantiate(RoadBuilderButtonsPrefab, Vector3.zero, Quaternion.identity).GetComponent<RectTransform>();
@@ -32,6 +39,31 @@ public class RoadBuilder : MonoBehaviour {
 				Buttons.GenerateButton.onClick.AddListener(OnGenerateNodeButtonClicked);
 			}
 		}
+	}
+
+	private void OnSliderValueChanged(float Value) {
+		RotationAngle = Value;
+	}
+
+	private void Update() {
+		if (LoadTrackPositions != null) {
+			if (ExperienceManager.GetWorldPosition(new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2), out Vector3 WorldPoint)) {
+				foreach (Transform transform in RoadNodes) {
+					Destroy(transform.gameObject);
+				}
+
+				RoadNodes.Clear();
+				foreach (Vector3 position in LoadTrackPositions) {
+					Transform transform = Instantiate(RoadNodePrefab, position + WorldPoint, Quaternion.identity).transform;
+					transform.RotateAround(WorldPoint, Vector3.up, RotationAngle);
+					RoadNodes.Add(transform);
+				}
+			}
+		}
+	}
+
+	private void OnTrackLoaded(List<Vector3> NodeList) {
+		LoadTrackPositions = NodeList;		
 	}
 
 	private void OnAddNodeButtonClicked() {
@@ -75,17 +107,15 @@ public class RoadBuilder : MonoBehaviour {
 
 	private void OnGenerateNodeButtonClicked() {
 		if (PathCreator != null) {
+			LoadTrackPositions = null;
 			PathCreator.bezierPath = new BezierPath(RoadNodes, space: PathSpace.xyz);
 			FindObjectOfType<RoadMeshCreator>().TriggerUpdate();
 			GameObject.Find("Road Mesh Holder").AddComponent<MeshCollider>();
-			GameObject start = GetStartTransform();
-			Vector3 end = RoadNodes[RoadNodes.Count - 1].position;
-			//PathCreator.path.
-			RoadNodes.ForEach((node) => Destroy(node.gameObject));
-			RoadNodes.Clear();
+
+			RoadNodes.ForEach((node) => node.gameObject.SetActive(false));
 
 			Destroy(Buttons.gameObject);
-			FindObjectOfType<GameManager>().OnRoadBuildingCompleted(start.transform, end);
+			FindObjectOfType<GameManager>().OnRoadBuildingCompleted(RoadNodes);
 		}
 	}
 
