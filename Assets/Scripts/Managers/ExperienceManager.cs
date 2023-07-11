@@ -8,6 +8,7 @@ using Niantic.ARDK.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ExperienceManager : MonoBehaviour {
 	[SerializeField] private GameObject PlanePrefab;
@@ -15,6 +16,8 @@ public class ExperienceManager : MonoBehaviour {
 	private bool RaceStarted;
 	private IARSession Session;
 	private Dictionary<Guid, GameObject> PlaneLookup;
+
+	public Text DebugText;
 
 
 	void Start() {
@@ -36,6 +39,16 @@ public class ExperienceManager : MonoBehaviour {
 		config.IsSharedExperienceEnabled = true;
 
 		Session.Run(config);
+	}
+
+	private void Update() {
+		/*
+		if (Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2, 500)), out RaycastHit Hit)) {
+			DebugText.text = Hit.collider.gameObject.name;
+		} else {
+			DebugText.text = "";
+		}
+		 */
 	}
 
 	private void OnAnchorsRemoved(AnchorsArgs args) {
